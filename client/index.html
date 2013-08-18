@@ -88,16 +88,17 @@
   <h3>{{name}}</h3>
   <div class="row">
     <div class="span5 question-code">
-      <textarea id="testInputText">{{initialCode}}</textarea>
+      <textarea>{{initialCode}}</textarea>
     </div>
     <div class="span4 question-canvas">
-      <canvas id="testCanvas"></canvas>
+      <canvas></canvas>
     </div>
     <div class="span9">
-      <div class="well question-output" id="testOutputText">
+      <div class="well question-output testOutputText">
         <em>Press "Run" to execute code...</em>
+        <pre></pre>
       </div>
     </div>
   </div>
-  <button class="btn">Run</button>
+  <button class="btn runButton">Run</button>
 </template>

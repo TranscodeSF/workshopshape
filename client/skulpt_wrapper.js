@@ -1,6 +1,6 @@
 // Takes in python code, executes it with skulpt, outputs to
 // a pre-element and a canvas-element
-function runSkulpt(inputPre, outputPre, outputCanvas) {
+runSkulpt = function (inputPre, outputPre, outputCanvas) {
   // output functions are configurable. This one just appends some text
   // to a pre element.
   function outf(text) {
@@ -19,7 +19,7 @@ function runSkulpt(inputPre, outputPre, outputCanvas) {
   // configure the output function
   // call Sk.importMainWithBody()
   function runit() {
-    var prog = inputPre[0].value;
+    var prog = inputPre.value;
     outputPre.innerHTML = "";
     Sk.canvas = outputCanvas;
     Sk.pre = outputPre;
@@ -30,6 +30,6 @@ function runSkulpt(inputPre, outputPre, outputCanvas) {
     catch (err) {
       outf(err.tp$str().v);
     }
-  } 
+  }
   runit();
 }
