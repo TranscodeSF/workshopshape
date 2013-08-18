@@ -27,3 +27,8 @@
   border: 1px solid blue;
   padding: 4px 6px;
 }
+
+.question-output  {
+  font-family: monospace;
+  white-space: pre;
+}

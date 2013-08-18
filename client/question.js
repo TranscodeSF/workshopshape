@@ -10,7 +10,7 @@ Template.question.events({
     console.log(templ);
     var codeElt = templ.find('.question-code textarea');
     var canvas = templ.find('.question-canvas canvas');
-    var outElt = templ.find('.question-output pre');
+    var outElt = templ.find('.question-output');
     runSkulpt(codeElt, outElt, canvas);
   }
 });
