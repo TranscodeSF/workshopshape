@@ -75,9 +75,13 @@
 
 <template name="worksheet">
   <h1>Worksheet</h1>
-  {{#each questions}}
-  {{> question}}
-  {{/each}}
+  {{#with selectedWorksheet}}
+    {{#each questions}}
+      {{#with getQuestion this}}
+        {{> question}}
+      {{/with}}
+    {{/each}}
+  {{/with}}
 </template>
 
 <template name="question">
