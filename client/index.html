@@ -74,8 +74,8 @@
 </template>
 
 <template name="worksheet">
-  <h1>Worksheet</h1>
   {{#with selectedWorksheet}}
+    <h1>{{name}}</h1>
     {{#each questions}}
       {{#with getQuestion this}}
         {{> question}}
