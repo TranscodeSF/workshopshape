@@ -1,0 +1,62 @@
+<head>
+  <meta charset="utf-8">
+  <title>Transcode Workshop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style type="text/css">
+    body {
+      padding-top: 60px;
+      padding-bottom: 40px;
+    }
+  </style>
+</head>
+
+<body>
+  {{> navbar}}
+  {{> content}}
+</body>
+
+<template name="navbar">
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <button type="button" class="btn btn-navbar" data-toggle="collapse"
+            data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="brand" href="#">Transcode Workshop</a>
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li class="active"><a href="#">Home</a></li>
+          </ul>
+          <form class="navbar-form pull-right" method="GET"
+            action="#">
+            <button type="submit" class="btn">Sign in with GitHub</button>
+          </form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+  </div>
+</template>
+
+<template name="content">
+  <div class="container">
+    <h1>Worksheet</h1>
+    {{> worksheet}}
+  </div>
+</template>
+
+<template name="worksheet">
+  {{#each questions}}
+  {{> question}}
+  {{/each}}
+</template>
+
+<template name="question">
+  <div>
+    <div><b>{{name}}</b></div>
+    <div><textarea>{{initialCode}}</textarea></div>
+    <div><a class="btn">Run</a></div>
+  </div>
+</template>
