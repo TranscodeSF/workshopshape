@@ -39,8 +39,14 @@
 
 <template name="content">
   <div class="container">
+    {{#if loggedIn}}
     <h1>Worksheet</h1>
     {{> worksheet}}
+    {{else}}
+    <h1>Welcome to the Workshop</h1>
+    <p>If you have a <a href="https://github.com">github</a> account, please log in using github above.</p>
+    <p>If you don't have an account yet, please go to <a href="https://github.com">github</a> now, and create one, and then log in.</p>
+    {{/if}}
   </div>
 </template>
 
