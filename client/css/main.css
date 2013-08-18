@@ -6,3 +6,24 @@
   vertical-align: middle;
   color: white;
 }
+
+.question-code {
+  position: relative;
+}
+
+.question-code textarea {
+  width: 460px;
+  height: 200px;
+  font-family: monospace;
+}
+
+.question-canvas {
+  position: relative;
+}
+
+.question-canvas canvas {
+  width: 350px;
+  height: 200px;
+  border: 1px solid blue;
+  padding: 4px 6px;
+}
