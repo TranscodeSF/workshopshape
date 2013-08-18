@@ -3,11 +3,20 @@
 </head>
 
 <body>
-  {{> hello}}
+  <h1>Workshopshape</h1>
+  {{> worksheet}}
 </body>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" />
+<template name="worksheet">
+  {{#each questions}}
+  {{> question}}
+  {{/each}}
+</template>
+
+<template name="question">
+  <div>
+    <div><b>{{name}}</b></div>
+    <div><textarea>{{initialCode}}</textarea></div>
+    <div><a class="btn">Run</a></div>
+  </div>
 </template>
