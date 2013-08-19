@@ -4,11 +4,37 @@ Template.question.created = function () {
   var self = this;
   console.log("created");
   self.save = function () {
-    console.log("Autosaving...");
     var code = self.find(".question-code textarea").value;
+    var answer = Answers.findOne({
+      user: Meteor.userId(),
+      question: self.data._id
+    });
+    if (!answer) {
+      Answers.insert({
+        user: Meteor.userId(),
+        question: self.data._id,
+        answer: code
+      });
+    } else {
+      Answers.update(answer._id, {$set: {
+        answer: code
+      }});
+    }
   };
   self.autosaveHandle = Meteor.setInterval(_.bind(self.save, self), 30*1000);
   runners[self.data._id] = self.runner = new SkulptRunner(self);
+};
+
+Template.question.answerText = function () {
+  var self = this;
+  var answer = Answers.findOne({
+    user: Meteor.userId(),
+    question: self._id
+  });
+  if (answer && answer.answer) {
+    return answer.answer;
+  }
+  return self.initialCode;
 };
 
 Template.question.output = function () {
