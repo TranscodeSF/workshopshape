@@ -2,8 +2,10 @@ var runners = {};
 
 Template.question.created = function () {
   var self = this;
+  console.log("created");
   self.save = function () {
-    console.log(self.find('.question-code').value);
+    console.log("Autosaving...");
+    var code = self.find(".question-code textarea").value;
   };
   self.autosaveHandle = Meteor.setInterval(_.bind(self.save, self), 30*1000);
   runners[self.data._id] = self.runner = new SkulptRunner(self);
@@ -11,7 +13,8 @@ Template.question.created = function () {
 
 Template.question.output = function () {
   var self = this;
-  return runners[self._id].output();
+  return runners[self._id].output() ||
+    "[Press \"Run\" to test your code...]";
 };
 
 Template.question.destroyed = function () {
@@ -23,7 +26,7 @@ Template.question.destroyed = function () {
 
 Template.question.events({
   'click .runButton': function (evt, templ) {
-
+    templ.save();
     var codeElt = templ.find('.question-code textarea');
     var code = codeElt.value;
     templ.runner.setCode(code);
