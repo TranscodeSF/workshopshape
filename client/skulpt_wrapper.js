@@ -42,3 +42,9 @@ _.extend(SkulptRunner.prototype, {
     return self.out;
   }
 });
+
+// Define a custom "Python builtin" for use in test reporting
+Sk.builtin.report_test = function (test_name, test_result) {
+  // do something with the arguments
+}
+Sk.builtins['report_test'] = Sk.builtin.report_test;
