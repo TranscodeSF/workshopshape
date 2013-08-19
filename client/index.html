@@ -88,11 +88,16 @@
   <h3>{{name}}</h3>
   <div class="row">
     <div class="span5 question-code">
-      <textarea>{{initialCode}}</textarea>
+      <textarea class="codearea">{{initialCode}}</textarea>
     </div>
     <div class="span4 question-canvas">
       <canvas></canvas>
     </div>
+  </div>
+  <p>
+    <button class="btn btn-success runButton">Run</button>
+  </p>
+  <div class="row">
     <div class="span9">
       <div class="well question-output">
         {{output}}
