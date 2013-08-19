@@ -6,3 +6,7 @@ Template.worksheet.selectedWorksheet = function () {
 Template.worksheet.getQuestion = function (id)  {
   return Questions.findOne(id);
 };
+
+Template.worksheet.editing = function () {
+  return Session.get('editingActive');
+};
