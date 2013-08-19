@@ -22,15 +22,21 @@
 
 .question-canvas canvas {
   width: 350px;
-  height: 200px;
+  height: 300px;
   border: 1px solid blue;
-  padding: 4px 6px;
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
 .question-output  {
   font-family: monospace;
    white-space: pre;
  }
+
+.question-code {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
 
  .codearea {
    font-family: monospace;
