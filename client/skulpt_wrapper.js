@@ -20,7 +20,8 @@ _.extend(SkulptRunner.prototype, {
   },
   run: function () {
     var self = this;
-    self.out="";
+    self.out= "";
+    self.err = null;
     self.outputDep.changed();
     Sk.canvas = self.templ.find('canvas');
     Sk.configure({
@@ -33,6 +34,7 @@ _.extend(SkulptRunner.prototype, {
     try {
       Sk.importMainWithBody("<stdin>", false, self.code);
     } catch (e) {
+      self.outputDep.changed();
       self.err = e;
     }
   },
@@ -40,6 +42,11 @@ _.extend(SkulptRunner.prototype, {
     var self = this;
     self.outputDep.depend();
     return self.out;
+  },
+  error: function () {
+    var self = this;
+    self.outputDep.depend();
+    return self.err;
   }
 });
 

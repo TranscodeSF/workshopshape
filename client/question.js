@@ -43,6 +43,12 @@ Template.question.output = function () {
     "[Press \"Run\" to test your code...]";
 };
 
+Template.question.error = function () {
+  var self = this;
+  var err = runners[self._id].error();
+  return err && err.toString();
+};
+
 Template.question.destroyed = function () {
   var self = this;
   // clean up
@@ -58,5 +64,8 @@ Template.question.events({
     templ.runner.setCode(code);
     console.log('running');
     templ.runner.run();
+  },
+  'blur .question-code textarea': function (evt, templ) {
+    templ.save();
   }
 });
