@@ -87,6 +87,9 @@
         {{/if}}
       {{/with}}
     {{/each}}
+    {{#if editing}}
+      <a class="addQuestion btn"><i class="icon-plus"></i>Add a question</a>
+    {{/if}}
   {{/with}}
 </template>
 
@@ -116,7 +119,6 @@
 
 <template name="editquestion">
   <form class="form-horizontal">
-    <legend>Edit question</legend>
     <div class="control-group">
       <label class="control-label">Title</label>
       <div class="controls questionName">
