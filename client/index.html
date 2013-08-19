@@ -29,7 +29,7 @@
         <div class="nav-collapse collapse">
           <ul class="nav">
             {{#if isAdmin}}
-            <li class="{{editingActive}}"><a class="toggleEdit">Edit</a></li>
+            <li class="{{editingActive}}"><a class="toggleEdit"><i class="icon-pencil icon-white"></i> Edit</a></li>
             {{/if}}
           </ul>
           <div class="pull-right">
@@ -121,8 +121,12 @@
     </div>
   </div>
   <p>
-    <button class="btn btn-success runButton">Run</button>
-    <button class="btn btn-danger revertButton">Revert</button>
+    <button class="btn btn-success runButton">
+      <i class="icon-play icon-white"></i> Run
+    </button>
+    <button class="btn btn-danger revertButton">
+      <i class="icon-arrow-left icon-white"></i> Revert
+    </button>
   </p>
   <div class="row">
     <div class="span9">
@@ -165,8 +169,8 @@
       </div>
     </div>
     <div class="form-actions">
-      <a class="btn btn-primary saveQuestion"><i class="icon-ok-sign"></i>Save</a>
-      <a class="btn btn-danger removeQuestion"><i class="icon-minus"></i>Remove</a>
+      <a class="btn btn-primary saveQuestion"><i class="icon-ok-sign"></i> Save</a>
+      <a class="btn btn-danger removeQuestion"><i class="icon-minus"></i> Remove</a>
     </div>
   </form>
 </template>
