@@ -20,5 +20,15 @@ Template.worksheet.events({
         questions: q
       }
     });
+  },
+  'blur .worksheetName': function (evt, templ) {
+    console.log("keypress");
+    Meteor.defer(function () {
+      var val = templ.find('.worksheetName').value;
+      Worksheets.update(Session.get('selectedWorksheet'), {
+        $set: {name: val}
+      });
+    });
+
   }
 });

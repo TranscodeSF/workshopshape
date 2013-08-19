@@ -12,5 +12,9 @@ Template.editquestion.events({
         initialCode: initialCode
       }
     });
+  },
+  'click .removeQuestion': function (evt, templ) {
+    var self = this;
+    Questions.remove(self._id);
   }
 });

@@ -29,9 +29,29 @@
 
 .question-output  {
   font-family: monospace;
-  white-space: pre;
+   white-space: pre;
+ }
+
+ .codearea {
+   font-family: monospace;
+ }
+ .worksheetList {
+  position: relative;
 }
 
-.codearea {
-  font-family: monospace;
+.removeWorksheet {
+  float: right;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+
+.addWorksheetPlus {
+  float: right;
+}
+
+.worksheetName {
+  height: 2em !important;
+  font-size: 20pt !important;
 }

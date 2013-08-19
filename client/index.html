@@ -69,15 +69,29 @@
     <ul class="nav nav-list">
       <li class="nav-header">Worksheets</li>
       {{#each worksheets}}
-      <li class="{{worksheetActive}}"><a class="selectWorksheet">{{name}}</a></li>
+      <li class="worksheetList {{worksheetActive}}">
+        <a class="selectWorksheet">{{name}}</a>
+        {{#if editing}}
+        <a class="removeWorksheet"><i class="icon-remove"></i></a>
+        {{/if}}
+      </li>
       {{/each}}
+      {{#if editing}}
+      <li class="worksheetList">
+        <a class="addWorksheet">Add worksheet<i class="addWorksheetPlus icon-plus"></i></a>
+      </li>
+      {{/if}}
     </ul>
   </div><!--/.well -->
 </template>
 
 <template name="worksheet">
   {{#with selectedWorksheet}}
+    {{#if editing}}
+    <input type="text" class="input-block-level worksheetName" value="{{name}}"></input>
+    {{else}}
     <h1>{{name}}</h1>
+    {{/if}}
     {{#each questions}}
       {{#with getQuestion this}}
         {{#if editing}}
@@ -151,7 +165,8 @@
       </div>
     </div>
     <div class="form-actions">
-      <a class="btn btn-primary saveQuestion">Save</a>
+      <a class="btn btn-primary saveQuestion"><i class="icon-ok-sign"></i>Save</a>
+      <a class="btn btn-danger removeQuestion"><i class="icon-minus"></i>Remove</a>
     </div>
   </form>
 </template>
