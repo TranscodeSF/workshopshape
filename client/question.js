@@ -4,7 +4,7 @@ Template.question.created = function () {
   var self = this;
   console.log("created");
   self.save = function () {
-    var code = self.find(".question-code textarea").value;
+    var code = self.codemirror.getValue();
     var answer = Answers.findOne({
       user: Meteor.userId(),
       question: self.data._id
@@ -59,9 +59,7 @@ Template.question.destroyed = function () {
 Template.question.events({
   'click .runButton': function (evt, templ) {
     templ.save();
-    var codeElt = templ.find('.question-code textarea');
-    var code = codeElt.value;
-    templ.runner.setCode(code);
+    templ.runner.setCode(templ.codemirror.getValue());
     console.log('running');
     templ.runner.run();
   },
@@ -69,3 +67,12 @@ Template.question.events({
     templ.save();
   }
 });
+
+// Re-renders textarea into a CodeMirror element
+Template.question.rendered = function () {
+  var self = this;
+  var codearea = self.find(".question-code textarea");
+  self.codemirror = CodeMirror.fromTextArea(codearea);
+  var codemirror = self.find(".CodeMirror");
+  codemirror.style.border = '1px solid blue';
+};
