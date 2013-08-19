@@ -14,6 +14,13 @@ Template.question.output = function () {
   return runners[self._id].output();
 };
 
+Template.question.destroyed = function () {
+  var self = this;
+  // clean up
+  Meteor.clearInterval(self.autosaveHandle);
+  delete runners[self._id];
+};
+
 Template.question.events({
   'click .runButton': function (evt, templ) {
 
