@@ -105,5 +105,37 @@
       </div>
     </div>
   </div>
-  <button class="btn runButton">Run</button>
+</template>
+
+<template name="editquestion">
+  <form class="form-horizontal">
+    <legend>Edit question</legend>
+    <div class="control-group">
+      <label class="control-label">Title</label>
+      <div class="controls">
+        <input class="input-xxlarge" type="text" placeholder="Enter a title...">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Description</label>
+      <div class="controls">
+        <textarea class="input-xxlarge" rows="5"></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Starting code</label>
+      <div class="controls">
+        <textarea class="input-xxlarge codearea" rows="5"></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Test code</label>
+      <div class="controls">
+        <textarea class="input-xxlarge codearea" rows="5"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </form>
 </template>
