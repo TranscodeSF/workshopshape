@@ -1,16 +1,26 @@
-Template.question.created = function (templ) {
-  // templ.save = function () {
-  //   console.log(templ.find('.question-code').value);
-  // };
-  // templ.autosaveHandle = Meteor.setInterval(_.bind(templ.save, templ), 30*1000);
+var runners = {};
+
+Template.question.created = function () {
+  var self = this;
+  self.save = function () {
+    console.log(self.find('.question-code').value);
+  };
+  self.autosaveHandle = Meteor.setInterval(_.bind(self.save, self), 30*1000);
+  runners[self.data._id] = self.runner = new SkulptRunner(self);
+};
+
+Template.question.output = function () {
+  var self = this;
+  return runners[self._id].output();
 };
 
 Template.question.events({
   'click .runButton': function (evt, templ) {
-    console.log(templ);
+
     var codeElt = templ.find('.question-code textarea');
-    var canvas = templ.find('.question-canvas canvas');
-    var outElt = templ.find('.question-output');
-    runSkulpt(codeElt, outElt, canvas);
+    var code = codeElt.value;
+    templ.runner.setCode(code);
+    console.log('running');
+    templ.runner.run();
   }
 });

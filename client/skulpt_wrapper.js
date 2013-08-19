@@ -1,35 +1,44 @@
-// Takes in python code, executes it with skulpt, outputs to
-// a pre-element and a canvas-element
-runSkulpt = function (inputPre, outputPre, outputCanvas) {
-  // output functions are configurable. This one just appends some text
-  // to a pre element.
-  function outf(text) {
-    outputPre.innerHTML = outputPre.innerHTML + text;
+function builtinRead(x) {
+  if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined) {
+    throw "File not found: '" + x + "'";
   }
-  function builtinRead(x) {
-    if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined) {
-      throw "File not found: '" + x + "'";
-    }
 
-    return Sk.builtinFiles["files"][x];
-  }
-  // Here's everything you need to run a python program in skulpt
-  // grab the code from your textarea
-  // get a reference to your pre element for output
-  // configure the output function
-  // call Sk.importMainWithBody()
-  function runit() {
-    var prog = inputPre.value;
-    outputPre.innerHTML = "";
-    Sk.canvas = outputCanvas;
-    Sk.pre = outputPre;
-    Sk.configure({output:outf, read:builtinRead});
-    try {
-      Sk.importMainWithBody("<stdin>", false, prog);
-    }
-    catch (err) {
-      outf(err.tp$str().v);
-    }
-  }
-  runit();
+  return Sk.builtinFiles["files"][x];
 }
+
+SkulptRunner = function (templ) {
+  var self = this;
+  self.templ = templ;
+  self.outputDep = new Deps.Dependency();
+  self.out="";
+};
+
+_.extend(SkulptRunner.prototype, {
+  setCode: function (code) {
+    var self = this;
+    self.code = code;
+  },
+  run: function () {
+    var self = this;
+    self.out="";
+    self.outputDep.changed();
+    Sk.canvas = self.templ.find('canvas');
+    Sk.configure({
+      output: function (s) {
+        self.outputDep.changed();
+        self.out = self.out + s;
+      },
+      read: builtinRead
+    });
+    try {
+      Sk.importMainWithBody("<stdin>", false, self.code);
+    } catch (e) {
+      self.err = e;
+    }
+  },
+  output: function () {
+    var self = this;
+    self.outputDep.depend();
+    return self.out;
+  }
+});
