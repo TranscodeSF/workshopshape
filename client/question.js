@@ -58,10 +58,16 @@ Template.question.destroyed = function () {
 
 Template.question.events({
   'click .runButton': function (evt, templ) {
+    console.log('pre-run');
     templ.save();
     templ.runner.setCode(templ.codemirror.getValue());
     console.log('running');
     templ.runner.run();
+  },
+  'click .revertButton': function (evt, templ) {
+    var self = this;
+    templ.codemirror.setValue(self.initialCode);
+    templ.save();
   },
   'blur .question-code textarea': function (evt, templ) {
     templ.save();
@@ -71,8 +77,12 @@ Template.question.events({
 // Re-renders textarea into a CodeMirror element
 Template.question.rendered = function () {
   var self = this;
-  var codearea = self.find(".question-code textarea");
-  self.codemirror = CodeMirror.fromTextArea(codearea);
-  var codemirror = self.find(".CodeMirror");
-  codemirror.style.border = '1px solid blue';
+  console.log("rendered");
+  if (!self.codemirror) {
+    var codearea = self.find(".question-code textarea");
+    self.codemirror = CodeMirror.fromTextArea(codearea);
+    self.codemirror.setValue(Template.question.answerText.apply(self.data));
+    var codemirror = self.find(".CodeMirror");
+    codemirror.style.border = '1px solid blue';
+  }
 };

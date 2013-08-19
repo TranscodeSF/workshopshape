@@ -98,7 +98,9 @@
   <p>{{text}}</p>
   <div class="row">
     <div class="span5 question-code">
-      <textarea class="codearea">{{answerText}}</textarea>
+      {{#constant}}
+      <textarea class="codearea"></textarea>
+      {{/constant}}
     </div>
     <div class="span4 question-canvas">
       <canvas></canvas>
@@ -106,6 +108,7 @@
   </div>
   <p>
     <button class="btn btn-success runButton">Run</button>
+    <button class="btn btn-danger revertButton">Revert</button>
   </p>
   <div class="row">
     <div class="span9">
