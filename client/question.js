@@ -86,3 +86,8 @@ Template.question.rendered = function () {
     codemirror.style.border = '1px solid blue';
   }
 };
+
+Template.question.getCanvasId = function () {
+  var self = this;
+  return self._id;
+};

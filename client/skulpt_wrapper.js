@@ -23,7 +23,8 @@ _.extend(SkulptRunner.prototype, {
     self.out= "";
     self.err = null;
     self.outputDep.changed();
-    Sk.canvas = self.templ.find('canvas');
+    // Sk.canvas expects the id of a canvas element
+    Sk.canvas = self.templ.data._id; 
     Sk.configure({
       output: function (s) {
         self.outputDep.changed();
