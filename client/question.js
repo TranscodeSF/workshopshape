@@ -13,7 +13,8 @@ Template.question.created = function () {
       Answers.insert({
         user: Meteor.userId(),
         question: self.data._id,
-        answer: code
+        answer: code,
+        results: {} // name -> description, status, [expected], [actual]
       });
     } else {
       Answers.update(answer._id, {$set: {
@@ -22,7 +23,7 @@ Template.question.created = function () {
     }
   };
   self.autosaveHandle = Meteor.setInterval(_.bind(self.save, self), 30*1000);
-  runners[self.data._id] = self.runner = new SkulptRunner(self);
+  runners[self.data._id] = self.runner = new SkulptRunner(self, self.data);
 };
 
 Template.question.answerText = function () {
@@ -43,6 +44,15 @@ Template.question.output = function () {
     "[Press \"Run\" to test your code...]";
 };
 
+Template.question.testResults = function () {
+  var self = this;
+  var results = [];
+  _.each(runners[self._id].getTestResults(), function (result, name) {
+    results.push(_.extend({name: name}, result));
+  });
+  return results;
+};
+
 Template.question.error = function () {
   var self = this;
   var err = runners[self._id].error();
@@ -58,10 +68,9 @@ Template.question.destroyed = function () {
 
 Template.question.events({
   'click .runButton': function (evt, templ) {
-    console.log('pre-run');
+    var self = this;
     templ.save();
     templ.runner.setCode(templ.codemirror.getValue());
-    console.log('running');
     templ.runner.run();
   },
   'click .revertButton': function (evt, templ) {
@@ -90,4 +99,18 @@ Template.question.rendered = function () {
 Template.question.getCanvasId = function () {
   var self = this;
   return self._id;
+
+Template.testResult.statusLabel = function () {
+  return {
+    pass: "label-success",
+    fail: "label-important"
+  }[this.status];
+};
+
+Template.testResult.statusIcon = function () {
+  console.log(this.status);
+  return {
+    pass: "icon-ok",
+    fail: "icon-remove"
+  }[this.status];
 };

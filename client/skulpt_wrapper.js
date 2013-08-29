@@ -6,11 +6,26 @@ function builtinRead(x) {
   return Sk.builtinFiles["files"][x];
 }
 
-SkulptRunner = function (templ) {
+SkulptRunner = function (templ, question) {
   var self = this;
   self.templ = templ;
   self.outputDep = new Deps.Dependency();
+  self.resultDep = new Deps.Dependency();
   self.out="";
+  self.question = question;
+};
+
+
+var runQueue = [];
+var running;
+
+var getAndRun = function () {
+  Meteor.defer(function () {
+    running = runQueue.shift();
+    if (running) {
+      running.doRun();
+    }
+  });
 };
 
 _.extend(SkulptRunner.prototype, {
@@ -19,6 +34,11 @@ _.extend(SkulptRunner.prototype, {
     self.code = code;
   },
   run: function () {
+    var self = this;
+    runQueue.push(self);
+    getAndRun();
+  },
+  doRun: function () {
     var self = this;
     self.out= "";
     self.err = null;
@@ -33,7 +53,20 @@ _.extend(SkulptRunner.prototype, {
       read: builtinRead
     });
     try {
-      Sk.importMainWithBody("<stdin>", false, self.code);
+      self.testResults = {};
+      var code = self.code;
+      if (self.question.testType === "code suffix") {
+        code = code + "\n" + self.question.test;
+      }
+      Sk.importMainWithBody("<stdin>", false, code);
+      if (self.question.testType === "match") {
+        self.testResults.match = {
+          description: "Output matches expected output",
+          status: self.question.test.trim() === self.out.trim() ? "pass" : "fail",
+          expected: self.question.test,
+          actual: self.out
+        };
+      }
     } catch (e) {
       self.outputDep.changed();
       self.err = e;
@@ -44,6 +77,11 @@ _.extend(SkulptRunner.prototype, {
     self.outputDep.depend();
     return self.out;
   },
+  getTestResults: function () {
+    var self = this;
+    self.resultDep.depend();
+    return self.testResults;
+  },
   error: function () {
     var self = this;
     self.outputDep.depend();
@@ -52,7 +90,23 @@ _.extend(SkulptRunner.prototype, {
 });
 
 // Define a custom "Python builtin" for use in test reporting
-Sk.builtin.report_test = function (test_name, test_result) {
+Sk.builtin.report_test = function (test_name, test_result, test_description) {
   // do something with the arguments
-}
+  if (running) {
+    running.testResults[test_name.v] = {
+      status: test_result.v ? "pass": "fail"
+    };
+    if (test_description) {
+      running.testResults[test_name.v].description = test_description.v;
+    }
+  }
+  running.resultDep.changed();
+};
+
 Sk.builtins['report_test'] = Sk.builtin.report_test;
+
+Sk.builtin.console_log = function (anything) {
+  console.log(anything);
+};
+
+Sk.builtins['console_log'] = Sk.builtin.console_log;

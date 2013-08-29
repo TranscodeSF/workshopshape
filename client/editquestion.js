@@ -5,11 +5,15 @@ Template.editquestion.events({
     var name = templ.find('.questionName input').value;
     var text = templ.find('.questionText textarea').value;
     var initialCode = templ.find('.questionInitialCode textarea').value;
+    var test = templ.find('.questionTest textarea').value;
+    var testType = templ.find('.testType').value;
     Questions.update(self._id, {
       $set: {
         name: name,
         text: text,
-        initialCode: initialCode
+        initialCode: initialCode,
+        test: test,
+        testType: testType
       }
     });
   },
@@ -18,3 +22,7 @@ Template.editquestion.events({
     Questions.remove(self._id);
   }
 });
+
+Template.editquestion.testTypeSel = function (elt) {
+  return this.testType === elt ? "selected" : "";
+};

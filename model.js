@@ -7,11 +7,8 @@ var questionSchema =  {
   name: "Question name",
   text: "Question text",
   initialCode: "initial code for question",
-  tests: {
-    "type": "matchOutput | returnTrue",
-    "name": "name the test will be displayed as",
-    "body": "either the code to run after loading the student code, or the output to match"
-  }
+  test: "text to use as test",
+  testType: "match | code suffix"
 };
 Questions = new Meteor.Collection('questions');
 
