@@ -99,6 +99,7 @@ Template.question.rendered = function () {
 Template.question.getCanvasId = function () {
   var self = this;
   return self._id;
+};
 
 Template.testResult.statusLabel = function () {
   return {
