@@ -130,10 +130,12 @@
   </p>
   <div class="row">
     <div class="span5">
-      <div class="well question-output">{{output}}</div>
-      {{#if error}}
-      <div class="well question-error">{{error}}</div>
-      {{/if}}
+      <div class="well">
+        <div class="question-output">{{output}}</div>
+        {{#if error}}
+        <div class="question-error">{{error}}</div>
+        {{/if}}
+      </div>
     </div>
     <div class="span4 testResults">
       {{#each testResults}}

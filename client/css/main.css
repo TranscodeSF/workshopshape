@@ -33,6 +33,12 @@
    white-space: pre;
  }
 
+.question-error {
+  font-family: monospace;
+  white-space: pre;
+  color: red;
+}
+
 .question-code {
     margin-top: 4px;
     margin-bottom: 4px;

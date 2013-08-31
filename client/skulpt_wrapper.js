@@ -11,8 +11,10 @@ SkulptRunner = function (templ, question) {
   self.templ = templ;
   self.outputDep = new Deps.Dependency();
   self.resultDep = new Deps.Dependency();
+  self.ranDep = new Deps.Dependency();
   self.out="";
   self.question = question;
+  self.ranCode = false;
 };
 
 
@@ -42,9 +44,11 @@ _.extend(SkulptRunner.prototype, {
     var self = this;
     self.out= "";
     self.err = null;
+    self.ranCode = true;
     self.outputDep.changed();
+    self.ranDep.changed();
     // Sk.canvas expects the id of a canvas element
-    Sk.canvas = self.templ.data._id; 
+    Sk.canvas = self.templ.data._id;
     Sk.configure({
       output: function (s) {
         self.outputDep.changed();
@@ -71,6 +75,11 @@ _.extend(SkulptRunner.prototype, {
       self.outputDep.changed();
       self.err = e;
     }
+  },
+  ran: function () {
+    var self = this;
+    self.ranDep.depend();
+    return self.ranCode;
   },
   output: function () {
     var self = this;

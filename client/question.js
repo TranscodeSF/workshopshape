@@ -40,8 +40,12 @@ Template.question.answerText = function () {
 
 Template.question.output = function () {
   var self = this;
-  return runners[self._id].output() ||
-    "[Press \"Run\" to test your code...]";
+  var runner = runners[self._id];
+  if (runner.ran()) {
+    return runners[self._id].output();
+  } else {
+    return "[Press \"Run\" to test your code...]";
+  }
 };
 
 Template.question.testResults = function () {
@@ -90,7 +94,15 @@ Template.question.rendered = function () {
   if (!self.codemirror) {
     var codearea = self.find(".question-code textarea");
     self.codemirror = CodeMirror.fromTextArea(codearea);
-    self.codemirror.setValue(Template.question.answerText.apply(self.data));
+    var code = Template.question.answerText.apply(self.data);
+    self.codemirror.setValue(code);
+    self.codemirror.on('change', function () {
+      var code = Template.question.answerText.apply(self.data);
+      var prevValid = self.resultsValid;
+      self.resultsValid = (code.trim() === self.codemirror.getValue().trim());
+      if (prevValid !== self.resultsValid) {
+      }
+    });
     var codemirror = self.find(".CodeMirror");
     codemirror.style.border = '1px solid blue';
   }
