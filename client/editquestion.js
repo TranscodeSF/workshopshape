@@ -19,7 +19,11 @@ Template.editquestion.events({
   },
   'click .removeQuestion': function (evt, templ) {
     var self = this;
-    Questions.remove(self._id);
+    Meteor.call('removeQuestion', Session.get('selectedWorksheet'), self._id);
+  },
+  'click .raiseQuestion': function (evt, templ) {
+    var self = this;
+    Meteor.call('raiseQuestion', Session.get('selectedWorksheet'), self._id);
   }
 });
 

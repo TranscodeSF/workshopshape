@@ -29,14 +29,26 @@
 }
 
 .question-output  {
-  font-family: monospace;
+   font-family: monospace;
    white-space: pre;
+   padding: 10;
  }
 
 .question-error {
   font-family: monospace;
   white-space: pre;
   color: red;
+}
+
+.question-printout {
+  height: 13em;
+  overflow: auto;
+}
+
+.testResults {
+  height: 13em;
+  overflow: auto;
+  width: 310px;
 }
 
 .question-code {

@@ -130,17 +130,19 @@
   </p>
   <div class="row">
     <div class="span5">
-      <div class="well">
+      <div class="well question-printout">
         <div class="question-output">{{output}}</div>
         {{#if error}}
         <div class="question-error">{{error}}</div>
         {{/if}}
       </div>
     </div>
-    <div class="span4 testResults">
-      {{#each testResults}}
-      {{> testResult}}
-      {{/each}}
+    <div class="span4">
+      <div class="well testResults">
+        {{#each testResults}}
+        {{> testResult}}
+        {{/each}}
+      </div>
     </div>
   </div>
 </template>
@@ -191,6 +193,7 @@
     </div>
     <div class="form-actions">
       <a class="btn btn-primary saveQuestion"><i class="icon-ok-sign"></i> Save</a>
+      <a class="btn btn-info raiseQuestion"><i class="icon-arrow-up"></i> Move Up</a>
       <a class="btn btn-danger removeQuestion"><i class="icon-minus"></i> Remove</a>
     </div>
   </form>

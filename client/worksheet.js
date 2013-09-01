@@ -13,13 +13,7 @@ Template.worksheet.editing = function () {
 
 Template.worksheet.events({
   'click .addQuestion': function (evt, templ) {
-    var q = Questions.insert({
-    });
-    Worksheets.update(Session.get('selectedWorksheet'), {
-      $push: {
-        questions: q
-      }
-    });
+    Meteor.call('addQuestion', Session.get('selectedWorksheet'));
   },
   'blur .worksheetName': function (evt, templ) {
     console.log("keypress");
