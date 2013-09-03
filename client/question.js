@@ -38,6 +38,11 @@ Template.question.answerText = function () {
   return self.initialCode;
 };
 
+var converter = new Showdown.converter();
+Template.question.textHtml = function () {
+  return converter.makeHtml(this.text);
+};
+
 Template.question.output = function () {
   var self = this;
   var runner = runners[self._id];

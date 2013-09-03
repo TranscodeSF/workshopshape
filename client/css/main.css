@@ -88,3 +88,7 @@
   height: 2em !important;
   font-size: 20pt !important;
 }
+
+.markdown code {
+  color: darkblue;
+}
