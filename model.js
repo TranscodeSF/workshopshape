@@ -2,6 +2,7 @@
 // People's answers to each question
 Answers = new Meteor.Collection('answers');
 
+
 // Questions.  Each is assigned to a worksheet
 var questionSchema =  {
   name: "Question name",
@@ -28,6 +29,8 @@ Questions.allow({
   }
 });
 
+
+
 // Worksheets are a set of questions that appear on a page together.
 var worksheetSchema = {
   name: "Name of worksheet",
@@ -45,6 +48,7 @@ Worksheets.allow({
     return userIsAdmin(userId);
   }
 });
+
 
 // Workshops are a named ordered set of worksheets.  One worksheet can belong to
 // more than one workshop.  You can join a workshop by typing its name.
