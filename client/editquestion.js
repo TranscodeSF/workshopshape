@@ -20,6 +20,8 @@ Template.editquestion.rendered = function () {
   var self = this;
   var ques = Questions.findOne(self.data._id);
 
+  // this is a sad hack because of how the meteor rendering code interacts with
+  // testing and checking the value of a checkbox.
   self.find('.useCode').checked = ques.useCode;
   self.find('.useTest').checked = ques.useTest;
   self.find('.useTest').disabled = !ques.useCode;

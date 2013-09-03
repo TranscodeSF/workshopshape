@@ -23,6 +23,5 @@ Template.worksheet.events({
         $set: {name: val}
       });
     });
-
   }
 });

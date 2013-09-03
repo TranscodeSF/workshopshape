@@ -6,22 +6,7 @@ Template.question.created = function () {
     if (typeof self.codemirror === "boolean")
       return;
     var code = self.codemirror.getValue();
-    var answer = Answers.findOne({
-      user: Meteor.userId(),
-      question: self.data._id
-    });
-    if (!answer) {
-      Answers.insert({
-        user: Meteor.userId(),
-        question: self.data._id,
-        answer: code,
-        results: {} // name -> description, status, [expected], [actual]
-      });
-    } else {
-      Answers.update(answer._id, {$set: {
-        answer: code
-      }});
-    }
+    Meteor.call('saveAnswer', self.data._id, code);
   };
   self.autosaveHandle = Meteor.setInterval(_.bind(self.save, self), 30*1000);
   runners[self.data._id] = self.runner = new SkulptRunner(self, self.data);
@@ -85,7 +70,7 @@ Template.question.events({
   },
   'click .revertButton': function (evt, templ) {
     var self = this;
-    templ.codemirror.setValue(self.initialCode);
+    templ.codemirror.setValue(self.initialCode || "");
     templ.save();
   },
   'blur .question-code textarea': function (evt, templ) {
@@ -104,7 +89,7 @@ Template.question.rendered = function () {
     }
     self.codemirror = CodeMirror.fromTextArea(codearea);
     var code = Template.question.answerText.apply(self.data);
-    self.codemirror.setValue(code);
+    self.codemirror.setValue(code || "");
     self.codemirror.on('change', function () {
       var code = Template.question.answerText.apply(self.data);
       var prevValid = self.resultsValid;
