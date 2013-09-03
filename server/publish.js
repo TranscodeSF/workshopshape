@@ -24,6 +24,12 @@ Meteor.publish('worksheetsForWorkshop', function (workshop) {
   });
 });
 
+Meteor.publish('githubUsername', function () {
+  return Meteor.users.find({_id: this.userId}, {fields: {
+    _id: 1,
+    "services.github.username": 1
+  }});
+});
 
 
 Meteor.publish('allWorkshops', function () {

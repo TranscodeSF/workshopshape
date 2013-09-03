@@ -9,5 +9,11 @@ Meteor.autorun(function () {
 });
 
 Meteor.autorun(function () {
-  Meteor.subscribe('answersForUser', Meteor.userId());
+  Meteor.userId(); // depend on it.
+  Meteor.subscribe('answersForUser');
+});
+
+Meteor.autorun(function () {
+  Meteor.userId(); // depend on it
+  Meteor.subscribe('githubUsername');
 });
