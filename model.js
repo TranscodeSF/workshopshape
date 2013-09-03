@@ -23,6 +23,7 @@ Questions.allow({
       name: Match.Optional(String),
       initialCode: Match.Optional(String),
       testType: Match.Optional(String),
+      test: Match.Optional(String),
       text: Match.Optional(String)
     }});
     return userIsAdmin(userId);

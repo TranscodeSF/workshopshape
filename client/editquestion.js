@@ -7,6 +7,7 @@ var save = function (id, templ) {
     setter.initialCode = templ.find('.questionInitialCode textarea').value;
   }
   if (templ.find('.questionTest textarea')) {
+    console.log("saving test");
     setter.test = templ.find('.questionTest textarea').value;
     setter.testType = templ.find('.testType').value;
   }
