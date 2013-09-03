@@ -4,24 +4,18 @@ Meteor.publish('answersForUser', function () {
   });
 });
 
-Meteor.publish('questionsForWorksheet', function (worksheet) {
-  check(worksheet, String);
-  var sheet = Worksheets.findOne(worksheet);
-  if (!sheet)
-    return null;
+Meteor.publish('questionsForWorksheet', function (questions) {
+  check(questions, [String]);
   return Questions.find({
-    _id: {$in: sheet.questions}
+    _id: {$in: questions}
   });
 });
 
 
-Meteor.publish('worksheetsForWorkshop', function (workshop) {
-  check(workshop, String);
-  var shop = Workshops.findOne(workshop);
-  if (!shop)
-    return null;
+Meteor.publish('worksheetsForWorkshop', function (worksheets) {
+  check(worksheets, [String]);
   return Worksheets.find({
-    _id: {$in: shop.worksheets}
+    _id: {$in: worksheets}
   });
 });
 
