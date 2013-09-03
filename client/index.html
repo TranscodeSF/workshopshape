@@ -25,7 +25,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="brand" href="#">Transcode Workshop</a>
+        <a class="brand" href="#">{{activeWorkshop}}</a>
         <div class="nav-collapse collapse">
           <ul class="nav">
             {{#if isAdmin}}
@@ -35,6 +35,16 @@
           <div class="pull-right">
           {{loginButtons}}
           </div>
+          <ul class="nav pull-right">
+            <li class="divider-vertical"></li>
+          </ul>
+          <form class="navbar-form pull-right">
+            <input type="text" class="span2 workshopNameInput"></input>
+            <button type="submit" class="btn btn-inverse">
+              {{#if isAdmin}}View or Create Workshop {{else}}View Workshop{{/if}}
+            </button>
+          </form>
+
         </div><!--/.nav-collapse -->
       </div>
     </div>
@@ -44,12 +54,27 @@
 <template name="content">
   <div class="container">
     {{#if loggedIn}}
+    {{#if activeWorkshop}}
     {{> loggedincontent}}
+    {{else}}
+    {{> chooseWorkshop}}
+    {{/if}}
     {{else}}
     <h1>Welcome!</h1>
     <p>If you have a <a href="https://github.com">GitHub</a> account, please log in using the button at the top right of this page.</p>
     <p>If you don't have an account yet, please go to <a href="https://github.com">GitHub</a> now, and create one, and then log in.</p>
     {{/if}}
+  </div>
+</template>
+
+<template name="chooseWorkshop">
+  <div class="row">
+    <div class="span4 offset4">
+        <h1>What workshop are you in?</h1>
+        <form id="chooseWorksop">
+          <input type="text" class="workshopNameInput chooseWorkshop"></input>
+        </form>
+    </div>
   </div>
 </template>
 
@@ -70,10 +95,15 @@
       <li class="nav-header">Worksheets</li>
       {{#each worksheets}}
       <li class="worksheetList {{worksheetActive}}">
-        <a class="selectWorksheet">{{name}}</a>
+        <a class="selectWorksheet">{{name}}
         {{#if editing}}
-        <a class="removeWorksheet"><i class="icon-remove"></i></a>
+        <span class="controlWorksheet">
+          <span class="raiseWorksheet"><i class="icon-arrow-up"></i></span>
+          <span class="removeWorksheet"><i class="icon-remove"></i></span>
+        </span>
         {{/if}}
+        </a>
+
       </li>
       {{/each}}
       {{#if editing}}

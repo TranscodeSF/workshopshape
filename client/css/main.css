@@ -63,19 +63,28 @@
   position: relative;
 }
 
-.removeWorksheet {
+.controlWorksheet {
   float: right;
   position: absolute;
   right: 0px;
   top: 0px;
   bottom: 0px;
+  display: inline;
 }
 
+.controlWorksheet > a {
+  display: inline !important;
+}
 .addWorksheetPlus {
   float: right;
 }
 
 .worksheetName {
+  height: 2em !important;
+  font-size: 20pt !important;
+}
+
+.chooseWorkshop {
   height: 2em !important;
   font-size: 20pt !important;
 }
