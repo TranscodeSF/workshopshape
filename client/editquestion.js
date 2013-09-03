@@ -1,5 +1,4 @@
 var save = function (id, templ) {
-  console.log("Saving...", templ);
   var setter = {
     name: templ.find('.questionName input').value,
     text: templ.find('.questionText textarea').value
@@ -31,7 +30,7 @@ Template.editquestion.rendered = function () {
 
 
 Template.editquestion.events({
-  'blur textarea': function (evt, templ) {
+  'blur': function (evt, templ) { // might as well save when *anything* is blurred.
     var self = this;
     save(self._id, templ);
   },

@@ -1,4 +1,3 @@
-
 Meteor.publish('answersForUser', function () {
   return Answers.find({
     user: this.userId
@@ -6,6 +5,7 @@ Meteor.publish('answersForUser', function () {
 });
 
 Meteor.publish('questionsForWorksheet', function (worksheet) {
+  check(worksheet, String);
   var sheet = Worksheets.findOne(worksheet);
   if (!sheet)
     return null;
@@ -16,6 +16,7 @@ Meteor.publish('questionsForWorksheet', function (worksheet) {
 
 
 Meteor.publish('worksheetsForWorkshop', function (workshop) {
+  check(workshop, String);
   var shop = Workshops.findOne(workshop);
   if (!shop)
     return null;

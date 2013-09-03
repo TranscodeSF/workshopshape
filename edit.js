@@ -19,6 +19,9 @@ var questionSynch = function (f) {
 
 Meteor.methods({
   addWorksheet: worksheetSynch(function (workshop) {
+    if (!userIsAdmin())
+      throw new Error("must be admin user");
+    check(workshop, String);
     if (!Workshops.findOne(workshop))
       throw new Error("no such workshop " + workshop);
     var id = Worksheets.insert({
@@ -28,7 +31,11 @@ Meteor.methods({
     Workshops.update(workshop, {$push: { worksheets: id} });
   }),
   removeWorksheet: worksheetSynch(function (workshop, sheet) {
+    if (!userIsAdmin())
+      throw new Error("must be admin user");
     var self = this;
+    check(workshop, String);
+    check(sheet, String);
     Worksheets.remove(sheet);
     var wksp = Workshops.findOne(workshop);
     var newWorksheets = _.filter(wksp.worksheets, function (q) {
@@ -41,6 +48,10 @@ Meteor.methods({
     });
   }),
   raiseWorksheet: worksheetSynch(function (shop, sheet) {
+    if (!userIsAdmin())
+      throw new Error("must be admin user");
+    check(shop, String);
+    check(sheet, String);
     var wksp = Workshops.findOne(shop);
     var index = wksp.worksheets.indexOf(sheet);
     var newWorksheets = wksp.worksheets;
@@ -55,6 +66,9 @@ Meteor.methods({
     });
   }),
   addQuestion: questionSynch(function (worksheet) {
+    if (!userIsAdmin())
+      throw new Error("must be admin user");
+    check(worksheet, String);
     var q = Questions.insert({});
     Worksheets.update(worksheet, {
       $push: {
@@ -63,6 +77,10 @@ Meteor.methods({
     });
   }),
   raiseQuestion: questionSynch(function (worksheet, question) {
+    if (!userIsAdmin())
+      throw new Error("must be admin user");
+    check(worksheet, String);
+    check(question, String);
     var wkst = Worksheets.findOne(worksheet);
     var index = wkst.questions.indexOf(question);
     var newQuestions = wkst.questions;
@@ -79,6 +97,10 @@ Meteor.methods({
     });
   }),
   removeQuestion: questionSynch(function (worksheet, question) {
+    if (!userIsAdmin())
+      throw new Error("must be admin user");
+    check(worksheet, String);
+    check(question, String);
     var self = this;
     Questions.remove(question);
     var wkst = Worksheets.findOne(worksheet);
