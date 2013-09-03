@@ -2,8 +2,9 @@ var runners = {};
 
 Template.question.created = function () {
   var self = this;
-  console.log("created");
   self.save = function () {
+    if (typeof self.codemirror === "boolean")
+      return;
     var code = self.codemirror.getValue();
     var answer = Answers.findOne({
       user: Meteor.userId(),
@@ -95,9 +96,12 @@ Template.question.events({
 // Re-renders textarea into a CodeMirror element
 Template.question.rendered = function () {
   var self = this;
-  console.log("rendered");
   if (!self.codemirror) {
     var codearea = self.find(".question-code textarea");
+    if (!codearea) {
+      self.codemirror = true;
+      return;
+    }
     self.codemirror = CodeMirror.fromTextArea(codearea);
     var code = Template.question.answerText.apply(self.data);
     self.codemirror.setValue(code);

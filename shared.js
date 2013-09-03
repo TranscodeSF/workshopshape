@@ -1,5 +1,4 @@
 userIsAdmin = function () {
-  console.log('isAdmin called');
   var user = Meteor.user();
   if (!user) return false;
   var username = user.services && user.services.github && user.services.github.username;

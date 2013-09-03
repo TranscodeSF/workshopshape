@@ -4,8 +4,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style type="text/css">
     body {
-      padding-top: 60px;
-      padding-bottom: 40px;
+    padding-top: 60px;
+    padding-bottom: 40px;
     }
   </style>
 </head>
@@ -20,7 +20,7 @@
     <div class="navbar-inner">
       <div class="container">
         <button type="button" class="btn btn-navbar" data-toggle="collapse"
-            data-target=".nav-collapse">
+                data-target=".nav-collapse">
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
@@ -33,7 +33,7 @@
             {{/if}}
           </ul>
           <div class="pull-right">
-          {{loginButtons}}
+            {{loginButtons}}
           </div>
           <ul class="nav pull-right">
             <li class="divider-vertical"></li>
@@ -70,10 +70,10 @@
 <template name="chooseWorkshop">
   <div class="row">
     <div class="span4 offset4">
-        <h1>What workshop are you in?</h1>
-        <form id="chooseWorksop">
-          <input type="text" class="workshopNameInput chooseWorkshop"></input>
-        </form>
+      <h1>What workshop are you in?</h1>
+      <form id="chooseWorksop">
+        <input type="text" class="workshopNameInput chooseWorkshop"></input>
+      </form>
     </div>
   </div>
 </template>
@@ -96,12 +96,12 @@
       {{#each worksheets}}
       <li class="worksheetList {{worksheetActive}}">
         <a class="selectWorksheet">{{name}}
-        {{#if editing}}
-        <span class="controlWorksheet">
-          <span class="raiseWorksheet"><i class="icon-arrow-up"></i></span>
-          <span class="removeWorksheet"><i class="icon-remove"></i></span>
-        </span>
-        {{/if}}
+          {{#if editing}}
+          <span class="controlWorksheet">
+            <span class="raiseWorksheet"><i class="icon-arrow-up"></i></span>
+            <span class="removeWorksheet"><i class="icon-remove"></i></span>
+          </span>
+          {{/if}}
         </a>
 
       </li>
@@ -117,38 +117,41 @@
 
 <template name="worksheet">
   {{#with selectedWorksheet}}
-    {{#if editing}}
-    <input type="text" class="input-block-level worksheetName" value="{{name}}"></input>
-    {{else}}
-    <h1>{{name}}</h1>
-    {{/if}}
-    {{#each questions}}
-      {{#with getQuestion this}}
-        {{#if editing}}
-          {{> editquestion}}
-        {{else}}
-          {{> question}}
-        {{/if}}
-      {{/with}}
-    {{/each}}
-    {{#if editing}}
-      <a class="addQuestion btn"><i class="icon-plus"></i>Add a question</a>
-    {{/if}}
+  {{#if editing}}
+  <input type="text" class="input-block-level worksheetName" value="{{name}}"></input>
+  {{else}}
+  <h1>{{name}}</h1>
+  {{/if}}
+  {{#each questions}}
+  {{#with getQuestion this}}
+  {{#if editing}}
+  {{> editquestion}}
+  {{else}}
+  {{> question}}
+  {{/if}}
+  {{/with}}
+  {{/each}}
+  {{#if editing}}
+  <a class="addQuestion btn"><i class="icon-plus"></i>Add a question</a>
+  {{/if}}
   {{/with}}
 </template>
 
 <template name="question">
   <h3>{{name}}</h3>
   <div class="markdown">{{{textHtml}}}</div>
+  {{#if useCode}}
   <div class="row">
-    <div class="span5 question-code">
+    <div class="{{#if useCanvas}}span5{{else}}span9{{/if}} question-code">
       {{#constant}}
       <textarea class="codearea"></textarea>
       {{/constant}}
     </div>
+    {{#if useCanvas}}
     <div class="span4 question-canvas">
       <canvas id={{getCanvasId}}></canvas>
     </div>
+    {{/if}}
   </div>
   <p>
     <button class="btn btn-success runButton">
@@ -159,7 +162,7 @@
     </button>
   </p>
   <div class="row">
-    <div class="span5">
+    <div class="{{#if useTest}}span5{{else}}span9{{/if}}">
       <div class="well question-printout">
         <div class="question-output">{{output}}</div>
         {{#if error}}
@@ -167,6 +170,7 @@
         {{/if}}
       </div>
     </div>
+    {{#if useTest}}
     <div class="span4">
       <div class="well testResults">
         {{#each testResults}}
@@ -174,7 +178,9 @@
         {{/each}}
       </div>
     </div>
+    {{/if}}
   </div>
+  {{/if}}
 </template>
 
 <template name="testResult">
@@ -202,11 +208,31 @@
       </div>
     </div>
     <div class="control-group">
+      <div class="controls">
+        <label class="checkbox inline">
+          <input class="useCode" type="checkbox" checked="{{useCode}}">code</input>
+        </label>
+        <label class="checkbox inline">
+          <input class="useTest"
+                 type="checkbox"
+                 checked="{{useTest}}">test</input>
+        </label>
+        <label class="checkbox inline">
+          <input class="useCanvas"
+                 type="checkbox"
+                 checked="{{useCanvas}}">canvas</input>
+        </label>
+      </div>
+    </div>
+    {{#if useCode}}
+    <div class="control-group">
       <label class="control-label">Starting code</label>
       <div class="controls questionInitialCode">
         <textarea class="input-xxlarge codearea" rows="5">{{initialCode}}</textarea>
       </div>
     </div>
+    {{/if}}
+    {{#if useTest}}
     <div class="control-group">
       <label class="control-label">Test</label>
       <div class="controls questionTest">
@@ -221,8 +247,8 @@
         </select>
       </div>
     </div>
+    {{/if}}
     <div class="form-actions">
-      <a class="btn btn-primary saveQuestion"><i class="icon-ok-sign"></i> Save</a>
       <a class="btn btn-info raiseQuestion"><i class="icon-arrow-up"></i> Move Up</a>
       <a class="btn btn-danger removeQuestion"><i class="icon-minus"></i> Remove</a>
     </div>
