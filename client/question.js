@@ -5,7 +5,21 @@ Template.question.created = function () {
   self.save = function () {
     if (typeof self.codemirror === "boolean")
       return;
-    var code = self.codemirror.getValue();
+    var code;
+    if (self.data.useRepl) {
+      code = "";
+      self.codemirror.eachLine(function (lh) {
+        if (lh.gutterMarkers &&
+            lh.gutterMarkers.replGutter &&
+            lh.gutterMarkers.replGutter.data === "-") {
+          // it's output
+        } else {
+          code += lh.text + "\n";
+        }
+      });
+    } else {
+      code = self.codemirror.getValue();
+    }
     Meteor.call('saveAnswer', self.data._id, code);
   };
   self.autosaveHandle = Meteor.setInterval(_.bind(self.save, self), 30*1000);
@@ -78,6 +92,81 @@ Template.question.events({
   }
 });
 
+var replEval = function (cm) {
+  var sections = [];
+  var currentSection = [];
+  cm.eachLine(function (lh) {
+    if (lh.gutterMarkers &&
+        lh.gutterMarkers.replGutter &&
+        lh.gutterMarkers.replGutter.data === "-") {
+      sections.push(currentSection);
+      currentSection = [];
+    } else if (lh.text === "" || lh.text.match(/^\S/)) {
+      sections.push(currentSection);
+      currentSection = [];
+      currentSection.push(lh.text);
+    } else {
+      currentSection.push(lh.text);
+    }
+  });
+  var i = 0;
+  var code = "";
+  var outBySection = {};
+  Sk.configure({ output: function (out) {
+    if (!outBySection[Sk.sectionNum])
+      outBySection[Sk.sectionNum] = "";
+    outBySection[Sk.sectionNum]+=out;
+  }});
+  _.each(sections, function (section) {
+    code += "set_section(" + (i++) + ")\n";
+    if (!_.isEmpty(section)) {
+      var insertPrint = !section[0].match(/^\s*$/) && !section[0].match(/[:=]/);
+      var joined = section.join('\n');
+      if (insertPrint)
+        joined = "__result = " + joined + "\nprint __result\n";
+      code += joined + "\n";
+    }
+  });
+  console.log(code);
+  var error;
+  var errorSection;
+  try {
+    Sk.importMainWithBody("repl", false, code);
+  } catch (e) {
+    error = e;
+    errorSection = Sk.sectionNum;
+  }
+  var lineNum = 0;
+  var appendLineIfNeeded = function (lineNum) {
+    while (cm.lineCount() < lineNum) {
+      cm.replaceRange("\n", {line: cm.lastLine(), ch: cm.getLine(cm.lastLine()).length});
+    }
+  };
+  var lines = [];
+  var markers = [];
+  _.each(sections, function (section, secNum) {
+    _.each(section, function (line, lineInSection) {
+      lines.push(line);
+      markers.push(lineInSection ? "..." : ">>>");
+      lineNum++;
+    });
+    if (outBySection[secNum]) {
+      _.each(outBySection[secNum].split("\n"), function (outLine) {
+        lines.push(outLine);
+        markers.push("-");
+      });
+    }
+  });
+  console.log(lines);
+  console.log(markers);
+  cm.setValue(lines.join("\n"));
+  _.each(markers, function (marker, i) {
+    cm.setGutterMarker(i, "replGutter", document.createTextNode(marker));
+  });
+  cm.replaceRange("\n", {line: cm.lastLine(), ch: cm.getLine(cm.lastLine()).length});
+  cm.setCursor({line: cm.lastLine(), ch: cm.getLine(cm.lastLine()).length});
+  console.log(outBySection);
+};
 // Re-renders textarea into a CodeMirror element
 Template.question.rendered = function () {
   var self = this;
@@ -87,7 +176,27 @@ Template.question.rendered = function () {
       self.codemirror = true;
       return;
     }
-    self.codemirror = CodeMirror.fromTextArea(codearea);
+    var options = {};
+    if (self.data.useRepl) {
+      options.gutters = ["replGutter"];
+    }
+    self.codemirror = CodeMirror.fromTextArea(codearea, options);
+    if (self.data.useRepl) {
+      self.codemirror.addKeyMap({
+        Enter: function (cm) {
+          console.log("enter hit");
+          var curs = cm.getCursor();
+          if (curs.line === cm.lastLine() && curs.ch === cm.getLine(curs.line).length) {
+            console.log("at end");
+            cm.replaceRange("\n", curs);
+            replEval(cm);
+          } else {
+            cm.replaceRange("\n", curs);
+          }
+        }
+      });
+      replEval(self.codemirror);
+    }
     var code = Template.question.answerText.apply(self.data);
     self.codemirror.setValue(code || "");
     self.codemirror.on('change', function () {

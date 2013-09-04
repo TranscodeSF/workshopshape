@@ -140,6 +140,15 @@
 <template name="question">
   <h3>{{name}}</h3>
   <div class="markdown">{{{textHtml}}}</div>
+  {{#if useRepl}}
+  <div class="row">
+    <div class="span9 question-code">
+      {{#constant}}
+      <textarea class="codearea"></textarea>
+      {{/constant}}
+    </div>
+  </div>
+  {{/if}}
   {{#if useCode}}
   <div class="row">
     <div class="{{#if useCanvas}}span5{{else}}span9{{/if}} question-code">
@@ -209,6 +218,9 @@
     </div>
     <div class="control-group">
       <div class="controls">
+        <label class="checkbox inline">
+          <input class="useRepl" type="checkbox" checked="{{useRepl}}">repl</input>
+        </label>
         <label class="checkbox inline">
           <input class="useCode" type="checkbox" checked="{{useCode}}">code</input>
         </label>

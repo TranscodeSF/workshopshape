@@ -20,6 +20,7 @@ Questions.allow({
       useCode: Match.Optional(Boolean),
       useTest: Match.Optional(Boolean),
       useCanvas: Match.Optional(Boolean),
+      useRepl: Match.Optional(Boolean),
       name: Match.Optional(String),
       initialCode: Match.Optional(String),
       testType: Match.Optional(String),

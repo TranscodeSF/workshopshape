@@ -119,3 +119,8 @@ Sk.builtin.console_log = function (anything) {
 };
 
 Sk.builtins['console_log'] = Sk.builtin.console_log;
+
+Sk.builtin.set_section = function (num) {
+  Sk.sectionNum = num.v;
+};
+Sk.builtins['set_section'] = Sk.builtin.set_section;

@@ -22,6 +22,7 @@ Template.editquestion.rendered = function () {
 
   // this is a sad hack because of how the meteor rendering code interacts with
   // testing and checking the value of a checkbox.
+  self.find('.useRepl').checked = ques.useRepl;
   self.find('.useCode').checked = ques.useCode;
   self.find('.useTest').checked = ques.useTest;
   self.find('.useTest').disabled = !ques.useCode;
@@ -43,12 +44,22 @@ Template.editquestion.events({
     var self = this;
     Meteor.call('raiseQuestion', Session.get('selectedWorksheet'), self._id);
   },
+  'change .useRepl': function (evt, templ) {
+    var self = this;
+    var useRepl = templ.find('.useRepl').checked;
+    var setter = {useRepl: useRepl};
+    if (useRepl)
+      setter.useCode = false;
+    Questions.update(self._id, {$set: setter});
+  },
   'change .useCode': function (evt, templ) {
     var self = this;
     var useCode = templ.find('.useCode').checked;
     var setter = {useCode: useCode};
     if (!useCode)
       setter.useTest = false;
+    else
+      setter.userRepl = false;
     Questions.update(self._id, {$set: setter});
   },
   'change .useTest': function (evt, templ) {

@@ -92,3 +92,10 @@
 .markdown code {
   color: darkblue;
 }
+
+
+.replGutter {
+  width: 2em;
+  background-color: lightgrey;
+  text-align: right;
+}
