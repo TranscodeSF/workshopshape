@@ -11,7 +11,8 @@ Template.question.created = function () {
       self.codemirror.eachLine(function (lh) {
         if (lh.gutterMarkers &&
             lh.gutterMarkers.replGutter &&
-            lh.gutterMarkers.replGutter.data === "-") {
+            (lh.gutterMarkers.replGutter.data === "-" ||
+             lh.gutterMarkers.replGutter.data === "XXX")) {
           // it's output
         } else {
           code += lh.text + "\n";
@@ -98,13 +99,19 @@ var replEval = function (cm) {
   cm.eachLine(function (lh) {
     if (lh.gutterMarkers &&
         lh.gutterMarkers.replGutter &&
-        lh.gutterMarkers.replGutter.data === "-") {
-      sections.push(currentSection);
-      currentSection = [];
+        (lh.gutterMarkers.replGutter.data === "-"
+         || lh.gutterMarkers.replGutter.data === "XXX")) {
+      if (!_.isEmpty(currentSection)) {
+        sections.push(currentSection);
+        currentSection = [];
+      }
     } else if (lh.text === "" || lh.text.match(/^\S/)) {
-      sections.push(currentSection);
-      currentSection = [];
-      currentSection.push(lh.text);
+      if (!_.isEmpty(currentSection)) {
+        sections.push(currentSection);
+        currentSection = [];
+      }
+      if (lh.text)
+        currentSection.push(lh.text);
     } else {
       currentSection.push(lh.text);
     }
@@ -135,13 +142,9 @@ var replEval = function (cm) {
   } catch (e) {
     error = e;
     errorSection = Sk.sectionNum;
+    console.log(errorSection, error.toString());
   }
   var lineNum = 0;
-  var appendLineIfNeeded = function (lineNum) {
-    while (cm.lineCount() < lineNum) {
-      cm.replaceRange("\n", {line: cm.lastLine(), ch: cm.getLine(cm.lastLine()).length});
-    }
-  };
   var lines = [];
   var markers = [];
   _.each(sections, function (section, secNum) {
@@ -156,14 +159,21 @@ var replEval = function (cm) {
         markers.push("-");
       });
     }
+    if (error && errorSection === secNum) {
+      _.each(error.toString().split('\n'), function (errLine) {
+        lines.push(errLine);
+        markers.push("XXX");
+      });
+    }
   });
+  lines.push("");
+  markers.push(">>>");
   console.log(lines);
   console.log(markers);
   cm.setValue(lines.join("\n"));
   _.each(markers, function (marker, i) {
     cm.setGutterMarker(i, "replGutter", document.createTextNode(marker));
   });
-  cm.replaceRange("\n", {line: cm.lastLine(), ch: cm.getLine(cm.lastLine()).length});
   cm.setCursor({line: cm.lastLine(), ch: cm.getLine(cm.lastLine()).length});
   console.log(outBySection);
 };
@@ -195,7 +205,9 @@ Template.question.rendered = function () {
           }
         }
       });
-      replEval(self.codemirror);
+      Meteor.defer(function () {
+        replEval(self.codemirror);
+      });
     }
     var code = Template.question.answerText.apply(self.data);
     self.codemirror.setValue(code || "");
