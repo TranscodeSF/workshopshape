@@ -110,8 +110,7 @@ var replEval = function (cm) {
         sections.push(currentSection);
         currentSection = [];
       }
-      if (lh.text)
-        currentSection.push(lh.text);
+      currentSection.push(lh.text);
     } else {
       currentSection.push(lh.text);
     }
@@ -124,17 +123,24 @@ var replEval = function (cm) {
       outBySection[Sk.sectionNum] = "";
     outBySection[Sk.sectionNum]+=out;
   }});
+  var unclosed = false;
   _.each(sections, function (section) {
     code += "set_section(" + (i++) + ")\n";
     if (!_.isEmpty(section)) {
       var insertPrint = !section[0].match(/^\s*$/) && !section[0].match(/[:=]/);
-      var joined = section.join('\n');
-      if (insertPrint)
-        joined = "__result = " + joined + "\nprint __result\n";
-      code += joined + "\n";
+      if (section[0].match(/:/) &&
+          (section.length === 1 || section[section.length-1].match(/^\s+\S+/))) {
+        // it's a block of some kind, that isn't closed, so don't add it to the code.
+        unclosed = true;
+      } else {
+        var joined = section.join('\n');
+        if (insertPrint)
+          joined = "__result = " + joined + "\nprint __result\n";
+        code += joined + "\n";
+      }
     }
   });
-  console.log(code);
+
   var error;
   var errorSection;
   try {
@@ -142,7 +148,6 @@ var replEval = function (cm) {
   } catch (e) {
     error = e;
     errorSection = Sk.sectionNum;
-    console.log(errorSection, error.toString());
   }
   var lineNum = 0;
   var lines = [];
@@ -166,16 +171,18 @@ var replEval = function (cm) {
       });
     }
   });
-  lines.push("");
-  markers.push(">>>");
-  console.log(lines);
-  console.log(markers);
+  if (unclosed) {
+    lines.push("  ");
+    markers.push("...");
+  } else {
+    lines.push("");
+    markers.push(">>>");
+  }
   cm.setValue(lines.join("\n"));
   _.each(markers, function (marker, i) {
     cm.setGutterMarker(i, "replGutter", document.createTextNode(marker));
   });
   cm.setCursor({line: cm.lastLine(), ch: cm.getLine(cm.lastLine()).length});
-  console.log(outBySection);
 };
 // Re-renders textarea into a CodeMirror element
 Template.question.rendered = function () {
@@ -194,10 +201,8 @@ Template.question.rendered = function () {
     if (self.data.useRepl) {
       self.codemirror.addKeyMap({
         Enter: function (cm) {
-          console.log("enter hit");
           var curs = cm.getCursor();
           if (curs.line === cm.lastLine() && curs.ch === cm.getLine(curs.line).length) {
-            console.log("at end");
             cm.replaceRange("\n", curs);
             replEval(cm);
           } else {
