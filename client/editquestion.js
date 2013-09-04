@@ -46,20 +46,23 @@ Template.editquestion.events({
   },
   'change .useRepl': function (evt, templ) {
     var self = this;
-    var useRepl = templ.find('.useRepl').checked;
+    var useRepl = !!templ.find('.useRepl').checked;
     var setter = {useRepl: useRepl};
-    if (useRepl)
+    if (useRepl) {
       setter.useCode = false;
+      setter.useTest = false;
+      setter.useCanvas = false;
+    }
     Questions.update(self._id, {$set: setter});
   },
   'change .useCode': function (evt, templ) {
     var self = this;
-    var useCode = templ.find('.useCode').checked;
+    var useCode = !!templ.find('.useCode').checked;
     var setter = {useCode: useCode};
     if (!useCode)
       setter.useTest = false;
     else
-      setter.userRepl = false;
+      setter.useRepl = false;
     Questions.update(self._id, {$set: setter});
   },
   'change .useTest': function (evt, templ) {
