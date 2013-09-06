@@ -105,7 +105,8 @@ var replEval = function (cm) {
         sections.push(currentSection);
         currentSection = [];
       }
-    } else if (lh.text === "" || lh.text.match(/^\S/)) {
+    } else if ( (lh.text === "" || lh.text.match(/^\S/)) &&
+                ! lh.text.match(/(else|elif).*:/)) {
       if (!_.isEmpty(currentSection)) {
         sections.push(currentSection);
         currentSection = [];
@@ -127,15 +128,16 @@ var replEval = function (cm) {
   _.each(sections, function (section) {
     code += "set_section(" + (i++) + ")\n";
     if (!_.isEmpty(section)) {
-      var insertPrint = !section[0].match(/^\s*$/) && !section[0].match(/^print|:\s*$|=]/);
+      var insertPrint = !section[0].match(/^\s*$/) && !section[0].match(/(^print)|(:\s*$)|(\=)/);
       if (section[0].match(/:/) &&
           (section.length === 1 || section[section.length-1].match(/^\s+\S+/))) {
         // it's a block of some kind, that isn't closed, so don't add it to the code.
         unclosed = true;
       } else {
         var joined = section.join('\n');
-        if (insertPrint)
-          joined = "__result = " + joined + "\nprint __result\n";
+        if (insertPrint) {
+          joined = "__result = repr(" + joined + ")\nprint __result\n";
+        }
         code += joined + "\n";
       }
     }
