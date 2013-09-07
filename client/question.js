@@ -133,7 +133,10 @@ var replEval = function (cm) {
     if (!_.isEmpty(section)) {
       var insertPrint = !section[0].match(/^\s*$/) && !section[0].match(/(^print)|(:\s*$)|([^=]\=[^=])/);
       if (section[0].match(/:/) &&
-          (section.length === 1 || section[section.length-1].match(/^\s+\S+/))) {
+          (section.length === 1 ||
+           section[section.length-1].match(/^\s+\S+/)) ||
+           section[section.length-1].match(/^el.*:\s*/)
+         ) {
         // it's a block of some kind, that isn't closed, so don't add it to the code.
         unclosed = true;
       } else {
@@ -149,6 +152,7 @@ var replEval = function (cm) {
   var error;
   var errorSection;
   try {
+    console.log(code);
     Sk.importMainWithBody("repl", false, code);
   } catch (e) {
     error = e;
