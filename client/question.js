@@ -79,6 +79,9 @@ Template.question.destroyed = function () {
 Template.question.events({
   'click .runButton': function (evt, templ) {
     var self = this;
+    var canvas = templ.find('canvas');
+    if (canvas && canvas.processing)
+      canvas.processing.exit();
     templ.save();
     templ.runner.setCode(templ.codemirror.getValue());
     templ.runner.run();

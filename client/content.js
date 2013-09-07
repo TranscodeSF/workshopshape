@@ -22,6 +22,8 @@ Template.navbar.events({
     evt.preventDefault();
     evt.stopPropagation();
     var workshopName = templ.find('.workshopNameInput').value;
+    if (!workshopName)
+      return;
     var workshop = Workshops.findOne(workshopName);
     if (workshop) {
       Session.set('activeWorkshop', workshopName);
